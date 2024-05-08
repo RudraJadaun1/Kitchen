@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kitchen Timer with Virtual Pet</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f0f0f0;
+      margin: 0;
+      padding: 0;
+    }
+
+    .container {
+      max-width: 600px;
+      margin: 50px auto;
+      text-align: center;
+    }
+
+    .clock {
+      font-size: 2rem;
+      margin-bottom: 20px;
+    }
+
+    .pet {
+      font-size: 5rem;
+      margin-bottom: 20px;
+    }
+
+    .timer {
+      font-size: 2rem;
+      margin-top: 20px;
+    }
+
+    input[type="range"] {
+      width: 80%;
+      margin-top: 20px;
+    }
+
+    .timer-controls {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 20px;
+    }
+
+    button {
+      font-size: 1.5rem;
+      padding: 10px 20px;
+      border-radius: 10px;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    button:hover {
+      transform: scale(1.1);
+    }
+
+    button:active {
+      transform: scale(0.9);
+    }
+
+    button:focus {
+      outline: none;
+    }
+
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="clock">00:00</div>
+    <h1>Kitchen Timer</h1>
+    <div class="pet">(>^_^<)</div>
+    <div class="timer">00:00</div>
+    <div class="timer-controls">
+      <input type="range" min="0" max="120" value="0">
+      <button id="startBtn">Start</button>
+      <button id="pauseBtn">Pause</button>
+      <button id="resetBtn">Reset</button>
+    </div>
+  </div>
+
+  <script>
+    const clockDisplay = document.querySelector('.clock');
+    const timerDisplay = document.querySelector('.timer');
+    const petDisplay = document.querySelector('.pet');
+    const timerSlider = document.querySelector('input[type="range"]');
+    const startBtn = document.getElementById('startBtn');
+    const pauseBtn = document.getElementById('pauseBtn');
+    const resetBtn = document.getElementById('resetBtn');
+
+    let totalSeconds = 0;
+    let timerInterval;
+
+    function updateClockDisplay() {
+      const minutes = Math.floor(totalSeconds / 60);
+      const seconds = totalSeconds % 60;
+      clockDisplay.textContent = `${minutes < 10 ? '0' : ''}${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+    }
+
+    function updateTimerDisplay() {
+      const minutes = Math.floor(totalSeconds / 60);
+      const seconds = totalSeconds % 60;
+      timerDisplay.textContent = `${minutes < 10 ? '0' : ''}${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+    }
+
+    function updatePetFace() {
+      const faces = ['(^_^)', '(>.<)', '(-_-)', '(^o^)'];
+      const randomIndex = Math.floor(Math.random() * faces.length);
+      petDisplay.textContent = faces[randomIndex];
+    }
+
+    function startTimer() {
+      timerInterval = setInterval(() => {
+        totalSeconds--;
+        updateClockDisplay();
+        updateTimerDisplay();
+        updatePetFace();
+        if (totalSeconds <= 0) {
+          clearInterval(timerInterval);
+          alert('Time is up!');
+        }
+      }, 1000);
+    }
+
+    function pauseTimer() {
+      clearInterval(timerInterval);
+    }
+
+    function resetTimer() {
+      clearInterval(timerInterval);
+      totalSeconds = 0;
+      timerSlider.value = 0;
+      updateClockDisplay();
+      updateTimerDisplay();
+      updatePetFace();
+    }
+
+    timerSlider.addEventListener('input', function() {
+      totalSeconds = parseInt(this.value) * 60; // Convert minutes to seconds
+      updateClockDisplay();
+      updateTimerDisplay();
+    });
+
+    startBtn.addEventListener('click', startTimer);
+    pauseBtn.addEventListener('click', pauseTimer);
+    resetBtn.addEventListener('click', resetTimer);
+  </script>
+</body>
+</html>
